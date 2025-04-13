@@ -1,5 +1,6 @@
 package cariotic.tbr_shelf.book.model;
 
+import cariotic.tbr_shelf.book.enums.Status;
 import cariotic.tbr_shelf.tag.model.Tag;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,10 +44,5 @@ public class Book extends AuditingEntity{
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public enum Status {
-        UNREAD,
-        READING,
-        FINISHED,
-        DNF
-    }
+
 }

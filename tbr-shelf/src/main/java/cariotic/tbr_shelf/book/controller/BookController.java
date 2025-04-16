@@ -37,19 +37,25 @@ public class BookController {
     }
 
     @PutMapping
-    public ResponseEntity<BookResponseDto> addBook(@RequestBody BookRequestDto bookDto){
-        BookResponseDto createdBook = bookService.save(bookDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdBook);
+    public ResponseEntity<?> addBook(@RequestBody BookRequestDto bookDto){
+        try {
+            BookResponseDto createdBook = bookService.save(bookDto);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(createdBook);
+        } catch(IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BookResponseDto> updateBook(@PathVariable Long id, @RequestBody BookRequestDto bookDto){
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody BookRequestDto bookDto){
         try {
             return ResponseEntity.ok(bookService.update(id, bookDto));
         } catch(EntityNotFoundException ex){
             return ResponseEntity.notFound().build();
+        } catch(IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 

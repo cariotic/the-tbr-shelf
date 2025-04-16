@@ -5,7 +5,11 @@ import cariotic.tbr_shelf.tag.dto.TagResponseDto;
 import cariotic.tbr_shelf.tag.model.Tag;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class TagMapper {
@@ -13,9 +17,10 @@ public class TagMapper {
     public TagResponseDto entityToDto(Tag tag){
         return TagResponseDto.builder()
                 .name(tag.getName())
-                .books(tag.getBooks()
+                .books(Optional.ofNullable(tag.getBooks())
                         .stream()
-                        .map(b -> b.toString())
+                        .flatMap(Collection::stream)
+                        .map(b -> b.getTitle())
                         .collect(Collectors.toList()))
                 .build();
     }

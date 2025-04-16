@@ -4,17 +4,23 @@ import cariotic.tbr_shelf.book.dto.BookRequestDto;
 import cariotic.tbr_shelf.book.dto.BookResponseDto;
 import cariotic.tbr_shelf.book.enums.Status;
 import cariotic.tbr_shelf.book.model.Book;
+import cariotic.tbr_shelf.tag.model.Tag;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class BookMapper {
-    public Book dtoToEntity(BookRequestDto dto){
+    public Book dtoToEntity(BookRequestDto dto, Set<Tag> tags){
         return Book.builder()
                 .title(dto.title())
                 .author(dto.author())
                 .datePurchased(dto.datePurchased())
                 .reasonBought(dto.reasonBought())
                 .status(stringToStatus(dto.status()))
+                .tags(tags)
                 .build();
     }
 
@@ -25,6 +31,9 @@ public class BookMapper {
                 .datePurchased(book.getDatePurchased())
                 .reasonBought(book.getReasonBought())
                 .status(book.getStatus().toString())
+                .tags(book.getTags().stream()
+                        .map(tag -> tag.getName())
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

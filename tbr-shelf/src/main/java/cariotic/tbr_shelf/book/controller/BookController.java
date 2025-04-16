@@ -2,7 +2,6 @@ package cariotic.tbr_shelf.book.controller;
 
 import cariotic.tbr_shelf.book.dto.BookRequestDto;
 import cariotic.tbr_shelf.book.dto.BookResponseDto;
-import cariotic.tbr_shelf.book.model.Book;
 import cariotic.tbr_shelf.book.service.BookService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -41,7 +39,9 @@ public class BookController {
     @PutMapping
     public ResponseEntity<BookResponseDto> addBook(@RequestBody BookRequestDto bookDto){
         BookResponseDto createdBook = bookService.save(bookDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdBook);
     }
 
     @PatchMapping("/{id}")

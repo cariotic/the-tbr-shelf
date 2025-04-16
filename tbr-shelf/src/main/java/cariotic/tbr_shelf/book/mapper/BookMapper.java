@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookMapper {
-    public Book DtoToEntity(BookRequestDto dto){
+    public Book dtoToEntity(BookRequestDto dto){
         return Book.builder()
                 .title(dto.title())
                 .author(dto.author())
@@ -18,7 +18,7 @@ public class BookMapper {
                 .build();
     }
 
-    public BookResponseDto BookToDto(Book book){
+    public BookResponseDto entityToDto(Book book){
         return BookResponseDto.builder()
                 .title(book.getTitle())
                 .author(book.getAuthor())

@@ -3,12 +3,12 @@ package cariotic.tbr_shelf.book.service;
 import cariotic.tbr_shelf.book.dto.BookRequestDto;
 import cariotic.tbr_shelf.book.dto.BookResponseDto;
 import cariotic.tbr_shelf.book.enums.Status;
+import cariotic.tbr_shelf.book.exceptions.BookNotFoundException;
 import cariotic.tbr_shelf.book.mapper.BookMapper;
 import cariotic.tbr_shelf.book.model.Book;
 import cariotic.tbr_shelf.book.repository.BookRepository;
 import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.service.TagService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -99,7 +99,7 @@ class BookServiceTest {
         when(bookRepository.existsById(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> bookService.update(1L, mock(BookRequestDto.class)))
-                .isInstanceOf(EntityNotFoundException.class)
+                .isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book with ID 1 not found");
     }
 
@@ -117,7 +117,7 @@ class BookServiceTest {
         when(bookRepository.existsById(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> bookService.delete(1L))
-                .isInstanceOf(EntityNotFoundException.class)
+                .isInstanceOf(BookNotFoundException.class)
                 .hasMessageContaining("Book with ID 1 not found");
     }
 }

@@ -2,6 +2,7 @@ package cariotic.tbr_shelf.book.service;
 
 import cariotic.tbr_shelf.tag.dto.TagRequestDto;
 import cariotic.tbr_shelf.tag.dto.TagResponseDto;
+import cariotic.tbr_shelf.tag.exceptions.TagNotFoundException;
 import cariotic.tbr_shelf.tag.mapper.TagMapper;
 import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.repository.TagRepository;
@@ -97,7 +98,7 @@ public class TagServiceTest {
         when(tagRepository.existsById(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> tagService.update(1L, mock(TagRequestDto.class)))
-                .isInstanceOf(EntityNotFoundException.class)
+                .isInstanceOf(TagNotFoundException.class)
                 .hasMessageContaining("Tag with ID 1 not found");
     }
 
@@ -115,7 +116,7 @@ public class TagServiceTest {
         when(tagRepository.existsById(1L)).thenReturn(false);
 
         assertThatThrownBy(() -> tagService.delete(1L))
-                .isInstanceOf(EntityNotFoundException.class)
+                .isInstanceOf(TagNotFoundException.class)
                 .hasMessageContaining("Tag with ID 1 not found");
     }
 }

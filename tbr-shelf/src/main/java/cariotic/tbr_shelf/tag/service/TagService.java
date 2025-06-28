@@ -2,6 +2,7 @@ package cariotic.tbr_shelf.tag.service;
 
 import cariotic.tbr_shelf.tag.dto.TagRequestDto;
 import cariotic.tbr_shelf.tag.dto.TagResponseDto;
+import cariotic.tbr_shelf.tag.exceptions.TagNotFoundException;
 import cariotic.tbr_shelf.tag.mapper.TagMapper;
 import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.repository.TagRepository;
@@ -35,7 +36,7 @@ public class TagService {
     public TagResponseDto findById(Long id) {
         return tagRepository.findById(id)
                 .map(tagMapper::entityToDto)
-                .orElseThrow(() -> new EntityNotFoundException("Tag with ID " + id + " not found"));
+                .orElseThrow(() -> new TagNotFoundException(id));
     }
 
     public TagResponseDto save(TagRequestDto tagDto){
@@ -45,14 +46,14 @@ public class TagService {
 
     public TagResponseDto update(Long id, TagRequestDto tagDto) {
         if (!tagRepository.existsById(id)){
-            throw new EntityNotFoundException("Tag with ID " + id + " not found");
+            throw new TagNotFoundException(id);
         }
         return tagMapper.entityToDto(tagRepository.save(tagMapper.dtoToEntity(tagDto)));
     }
 
     public void delete(Long id) {
         if (!tagRepository.existsById(id)){
-            throw new EntityNotFoundException("Tag with ID " + id + " not found");
+            throw new TagNotFoundException(id);
         }
         tagRepository.deleteById(id);
     }

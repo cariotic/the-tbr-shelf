@@ -2,6 +2,7 @@ package cariotic.tbr_shelf.tag.controller;
 
 import cariotic.tbr_shelf.tag.dto.TagRequestDto;
 import cariotic.tbr_shelf.tag.dto.TagResponseDto;
+import cariotic.tbr_shelf.tag.exceptions.TagNotFoundException;
 import cariotic.tbr_shelf.tag.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class TagController {
     public ResponseEntity<TagResponseDto> getTag(@PathVariable Long id){
         try{
             return ResponseEntity.ok(tagService.findById(id));
-        } catch(EntityNotFoundException ex){
+        } catch(TagNotFoundException ex){
             return ResponseEntity.notFound().build();
         }
     }
@@ -47,7 +48,7 @@ public class TagController {
     public ResponseEntity<TagResponseDto> updateTag(@PathVariable Long id, @RequestBody TagRequestDto tagDto){
         try {
             return ResponseEntity.ok(tagService.update(id, tagDto));
-        } catch(EntityNotFoundException ex){
+        } catch(TagNotFoundException ex){
             return ResponseEntity.notFound().build();
         }
     }
@@ -57,7 +58,7 @@ public class TagController {
         try{
             tagService.delete(id);
             return ResponseEntity.noContent().build();
-        } catch(EntityNotFoundException ex){
+        } catch(TagNotFoundException ex){
             return ResponseEntity.notFound().build();
         }
     }

@@ -2,11 +2,11 @@ package cariotic.tbr_shelf.book.service;
 
 import cariotic.tbr_shelf.book.dto.BookRequestDto;
 import cariotic.tbr_shelf.book.dto.BookResponseDto;
+import cariotic.tbr_shelf.book.exceptions.BookNotFoundException;
 import cariotic.tbr_shelf.book.mapper.BookMapper;
 import cariotic.tbr_shelf.book.repository.BookRepository;
 import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.service.TagService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class BookService {
     public BookResponseDto findById(Long id) {
         return bookRepository.findById(id)
                 .map(bookMapper::entityToDto)
-                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + id + " not found"));
+                .orElseThrow(() -> new BookNotFoundException(id));
     }
 
     public BookResponseDto save(BookRequestDto bookDto){
@@ -46,7 +46,7 @@ public class BookService {
 
     public BookResponseDto update(Long id, BookRequestDto bookDto) {
         if (!bookRepository.existsById(id)){
-            throw new EntityNotFoundException("Book with ID " + id + " not found");
+            throw new BookNotFoundException(id);
         }
         Set<Tag> tags = tagService.getTagsFromNames(bookDto.tags());
         return bookMapper.entityToDto(bookRepository.save(bookMapper.dtoToEntity(bookDto, tags)));
@@ -54,7 +54,7 @@ public class BookService {
 
     public void delete(Long id) {
         if (!bookRepository.existsById(id)){
-            throw new EntityNotFoundException("Book with ID " + id + " not found");
+            throw new BookNotFoundException(id);
         }
         bookRepository.deleteById(id);
     }

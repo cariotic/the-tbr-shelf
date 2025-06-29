@@ -8,6 +8,8 @@ import cariotic.tbr_shelf.book.repository.BookRepository;
 import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,11 @@ public class BookService {
                 .stream()
                 .map(bookMapper::entityToDto)
                 .toList();
+    }
+
+    public Page<BookResponseDto> findAll(Pageable pageable){
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::entityToDto);
     }
 
     public BookResponseDto findById(Long id) {

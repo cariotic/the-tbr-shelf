@@ -5,6 +5,10 @@ import cariotic.tbr_shelf.book.dto.BookResponseDto;
 import cariotic.tbr_shelf.book.exceptions.BookNotFoundException;
 import cariotic.tbr_shelf.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +25,18 @@ public class BookController {
         this.bookService = bookService;
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<BookResponseDto>> getAllBooks(){
+//        return ResponseEntity.ok(bookService.findAll());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<BookResponseDto>> getAllBooks(){
-        return ResponseEntity.ok(bookService.findAll());
+    public ResponseEntity<Page<BookResponseDto>> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title") String sortBy){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

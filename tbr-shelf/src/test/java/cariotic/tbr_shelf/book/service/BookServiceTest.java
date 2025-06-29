@@ -14,6 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -45,18 +50,24 @@ class BookServiceTest {
     void findAll_ReturnsMappedList() {
         Book book = new Book(1L, "The Girl with the Dragon Tattoo", "Stieg Larsson", LocalDate.parse("2005-08-01"), "", null, Status.UNREAD);
         BookResponseDto dto = new BookResponseDto("The Girl with the Dragon Tattoo", "Stieg Larsson", LocalDate.parse("2005-08-01"), "", null, Status.UNREAD.toString());
+        List<Book> books = List.of(book);
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("title"));
+        Page<Book> page = new PageImpl<>(books, pageable, books.size());
 
-        when(bookRepository.findAll()).thenReturn(List.of(book));
+        when(bookRepository.findAll(pageable)).thenReturn(page);
         when(bookMapper.entityToDto(book)).thenReturn(dto);
 
-        List<BookResponseDto> result = bookService.findAll();
+        Page<BookResponseDto> result = bookService.findAll(pageable);
 
-        assertThat(result)
+        assertThat(result.getNumber())
+                .isEqualTo(0);
+        assertThat(result.getTotalElements())
+                .isEqualTo(1);
+        assertThat(result.getContent())
                 .isNotNull()
-                .hasSize(1)
                 .containsExactly(dto);
 
-        verify(bookRepository).findAll();
+        verify(bookRepository).findAll(pageable);
         verify(bookMapper).entityToDto(book);
     }
 

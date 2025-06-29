@@ -6,6 +6,10 @@ import cariotic.tbr_shelf.tag.exceptions.TagNotFoundException;
 import cariotic.tbr_shelf.tag.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +28,11 @@ public class TagController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TagResponseDto>> getAllTags(){
-        return ResponseEntity.ok(tagService.findAll());
+    public ResponseEntity<Page<TagResponseDto>> getAllTags(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        return ResponseEntity.ok(tagService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

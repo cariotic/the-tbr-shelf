@@ -25,11 +25,6 @@ public class BookController {
         this.bookService = bookService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<BookResponseDto>> getAllBooks(){
-//        return ResponseEntity.ok(bookService.findAll());
-//    }
-
     @GetMapping
     public ResponseEntity<Page<BookResponseDto>> getAllBooks(
             @RequestParam(defaultValue = "0") int page,

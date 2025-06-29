@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
@@ -43,18 +44,24 @@ public class TagServiceTest {
     void findAll_ReturnsMappedList(){
         Tag tag = new Tag(1L, "Fantasy", null);
         TagResponseDto dto = new TagResponseDto("Fantasy", null);
+        List<Tag> tags = List.of(tag);
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("name"));
+        Page<Tag> page = new PageImpl<>(tags, pageable, tags.size());
 
-        when(tagRepository.findAll()).thenReturn(List.of(tag));
+        when(tagRepository.findAll(pageable)).thenReturn(page);
         when(tagMapper.entityToDto(tag)).thenReturn(dto);
 
-        List<TagResponseDto> result = tagService.findAll();
+        Page<TagResponseDto> result = tagService.findAll(pageable);
 
-        assertThat(result)
+        assertThat(result.getNumber())
+                .isEqualTo(0);
+        assertThat(result.getTotalElements())
+                .isEqualTo(tags.size());
+        assertThat(result.getContent())
                 .isNotNull()
-                .hasSize(1)
                 .containsExactly(dto);
 
-        verify(tagRepository).findAll();
+        verify(tagRepository).findAll(pageable);
         verify(tagMapper).entityToDto(tag);
     }
 

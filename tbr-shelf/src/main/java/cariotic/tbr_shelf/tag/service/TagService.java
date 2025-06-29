@@ -8,6 +8,8 @@ import cariotic.tbr_shelf.tag.model.Tag;
 import cariotic.tbr_shelf.tag.repository.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -31,6 +33,11 @@ public class TagService {
         return tagRepository.findAll().stream()
                 .map(tagMapper::entityToDto)
                 .collect(Collectors.toList());
+    }
+
+    public Page<TagResponseDto> findAll(Pageable pageable){
+        return tagRepository.findAll(pageable)
+                .map(tagMapper::entityToDto);
     }
 
     public TagResponseDto findById(Long id) {
